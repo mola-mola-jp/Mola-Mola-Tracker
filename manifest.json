@@ -2,7 +2,7 @@
   "name": "Mola Mola Tracker",
   "short_name": "Mola Mola",
   "description": "A playful, ocean-themed period tracker with a Mola Mola mascot.",
-  "id": "/mola-mola-tracker/",
+  "id": "/Mola-Mola-Tracker/",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
