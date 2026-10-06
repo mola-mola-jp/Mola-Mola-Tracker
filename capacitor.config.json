@@ -1,0 +1,9 @@
+{
+  "appId": "com.molamolatracker.app",
+  "appName": "Mola Mola",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#8fa8a1"
+  }
+}

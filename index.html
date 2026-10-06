@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mola Mola Tracker</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#8fa8a1">
+<meta name="description" content="A playful, ocean-themed period tracker with a Mola Mola mascot.">
+
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mola Mola">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="ocean">
+  <h1 class="visually-hidden">Mola Mola Tracker</h1>
+
+  <div id="install-banner" class="install-banner hidden">
+    <span id="install-banner-text" class="install-banner-text"></span>
+    <div class="install-banner-actions">
+      <button type="button" id="install-banner-action" class="btn-primary install-banner-btn hidden">Install</button>
+      <button type="button" id="install-banner-dismiss" class="dialog-close" aria-label="Dismiss">✕</button>
+    </div>
+  </div>
+
+  <div id="data-error-banner" class="install-banner data-error-banner hidden">
+    <span id="data-error-text" class="install-banner-text"></span>
+    <div class="install-banner-actions">
+      <button type="button" id="data-error-dismiss" class="dialog-close" aria-label="Dismiss">✕</button>
+    </div>
+  </div>
+
+  <main class="content" id="app-shell">
+
+    <div class="ocean-scene" id="ocean-scene">
+      <img class="scene-bg" src="icons/ocean-bg.jpg" alt="" aria-hidden="true">
+
+      <button type="button" class="help-btn" id="help-btn" aria-label="How it works">?</button>
+
+      <div class="date-tracker" id="date-tracker">
+        <img class="date-tracker-art" src="icons/date-tracker.png" alt="">
+        <div class="date-tracker-date">
+          <span id="dt-weekday"></span>
+          <span id="dt-daymonth"></span>
+        </div>
+        <div class="date-tracker-count" id="dt-count" aria-label="Cycles tracked">
+          <span class="dt-digit">0</span><span class="dt-digit">0</span><span class="dt-digit">0</span><span class="dt-digit">0</span>
+        </div>
+      </div>
+
+      <div class="scene-speech-bubble" id="scene-speech-bubble">
+        <img class="speech-bubble-art" src="icons/speech-bubble.png" alt="">
+        <span class="speech-bubble-text" id="speech-bubble-text"></span>
+      </div>
+
+      <div class="scene-mola" id="scene-mola-drop">
+        <img id="scene-mola-img" src="icons/mola-resting.png" alt="Mola Mola mascot">
+      </div>
+
+      <div class="toolbox" id="toolbox">
+        <img class="toolbox-art" src="icons/toolbox.png" alt="">
+        <div class="toolbox-slots">
+          <button type="button" class="tool-slot" id="tool-seaweed" aria-label="Log a period">
+            <img src="icons/seaweed.png" alt="" draggable="false">
+          </button>
+          <button type="button" class="tool-slot" id="tool-jellyfish" aria-label="Predict next period">
+            <img src="icons/jellyfish.png" alt="" draggable="false">
+          </button>
+          <button type="button" class="tool-slot" id="tool-history" aria-label="View cycle history">
+            <img src="icons/fish.png" alt="" draggable="false">
+          </button>
+          <div class="tool-slot tool-slot-empty" aria-hidden="true"></div>
+          <div class="tool-slot tool-slot-empty" aria-hidden="true"></div>
+          <div class="tool-slot tool-slot-empty" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <dialog id="start-cal-dialog" class="mola-dialog calendar-dialog">
+      <div class="dialog-header">
+        <h2>Start date</h2>
+        <button type="button" id="start-cal-close" class="dialog-close" aria-label="Close">✕</button>
+      </div>
+      <div class="calendar-nav">
+        <button type="button" id="start-cal-prev" class="cal-nav-btn" aria-label="Earlier dates">‹</button>
+        <span id="start-cal-label" class="cal-label"></span>
+        <button type="button" id="start-cal-next" class="cal-nav-btn" aria-label="Later dates">›</button>
+      </div>
+      <div class="calendar-grid" id="start-cal-grid"></div>
+    </dialog>
+
+    <dialog id="end-cal-dialog" class="mola-dialog calendar-dialog">
+      <div class="dialog-header">
+        <h2 id="end-cal-title">End date</h2>
+        <button type="button" id="end-cal-close" class="dialog-close" aria-label="Close">✕</button>
+      </div>
+      <div class="calendar-nav">
+        <button type="button" id="end-cal-prev" class="cal-nav-btn" aria-label="Earlier dates">‹</button>
+        <span id="end-cal-label" class="cal-label"></span>
+        <button type="button" id="end-cal-next" class="cal-nav-btn" aria-label="Later dates">›</button>
+      </div>
+      <div class="calendar-grid" id="end-cal-grid"></div>
+      <div class="calendar-footer">
+        <button type="button" id="save-period-btn" class="btn-primary" disabled>Save period</button>
+        <button type="button" id="period-ongoing-btn" class="btn-secondary">Still going</button>
+      </div>
+    </dialog>
+
+    <dialog id="help-dialog" class="mola-dialog help-dialog">
+      <div class="dialog-header">
+        <h2>How it works</h2>
+        <button type="button" id="help-close" class="dialog-close" aria-label="Close">✕</button>
+      </div>
+      <p class="help-intro">Drag an item from the toolbox onto the Mola Mola to feed it.</p>
+      <ul class="help-list">
+        <li class="help-item">
+          <span class="help-icon"><img src="icons/seaweed.png" alt=""></span>
+          <div>
+            <h3>Seaweed: log a period</h3>
+            <p>Feed the Mola Mola seaweed to record a period. Choose the day it started, then the day it ended, or pick "Still going" if it hasn't finished. Feed it seaweed again later to add the end date.</p>
+          </div>
+        </li>
+        <li class="help-item">
+          <span class="help-icon"><img src="icons/jellyfish.png" alt=""></span>
+          <div>
+            <h3>Jellyfish: predict your next period</h3>
+            <p>Feed the Mola Mola a jellyfish and it will tell you how many days until your next period is expected, or how many days overdue it is.</p>
+          </div>
+        </li>
+        <li class="help-item">
+          <span class="help-icon"><img src="icons/fish.png" alt=""></span>
+          <div>
+            <h3>Fish: view your history</h3>
+            <p>Feed the Mola Mola a fish to open your cycle history. See every period you've logged along with your average period and cycle length, and edit or delete any entry.</p>
+          </div>
+        </li>
+      </ul>
+      <p class="help-privacy">Your data stays on this device. <a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a></p>
+    </dialog>
+
+    <dialog id="history-dialog" class="mola-dialog history-dialog">
+      <div class="dialog-header">
+        <h2>Cycle History</h2>
+        <button type="button" id="history-close" class="dialog-close" aria-label="Close">✕</button>
+      </div>
+      <div class="history-stats" id="history-stats"></div>
+      <ul id="history-list" class="history-list">
+        <li class="empty-state">Feed the Mola Mola some seaweed to log your first period.</li>
+      </ul>
+    </dialog>
+
+  </main>
+
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
