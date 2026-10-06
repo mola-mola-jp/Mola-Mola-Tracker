@@ -638,11 +638,6 @@ body {
   flex-shrink: 0;
 }
 
-.install-banner-btn {
-  padding: 8px 14px;
-  font-size: 0.85rem;
-}
-
 .data-error-banner {
   background: rgba(201, 112, 79, 0.28);
   border-color: rgba(201, 112, 79, 0.55);

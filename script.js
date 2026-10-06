@@ -708,66 +708,7 @@ if (navigator.storage && typeof navigator.storage.persist === 'function') {
   navigator.storage.persist().catch(() => {});
 }
 
-// --- PWA: install banner + service worker -------------------------------
-
-const INSTALL_DISMISS_KEY = 'molaInstallDismissed';
-const installBanner = document.getElementById('install-banner');
-const installBannerText = document.getElementById('install-banner-text');
-const installBannerAction = document.getElementById('install-banner-action');
-const installBannerDismiss = document.getElementById('install-banner-dismiss');
-
-let deferredInstallPrompt = null;
-
-function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-}
-
-function isIos() {
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
-}
-
-// True when running inside the native iOS app wrapper rather than a browser.
-const isNativeApp = location.protocol === 'capacitor:' ||
-  !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
-
-function showInstallBanner(text, { withAction } = {}) {
-  if (isNativeApp) return;
-  if (localStorage.getItem(INSTALL_DISMISS_KEY) === 'true') return;
-  if (isStandalone()) return;
-  installBannerText.textContent = text;
-  installBannerAction.classList.toggle('hidden', !withAction);
-  installBanner.classList.remove('hidden');
-}
-
-function dismissInstallBanner() {
-  installBanner.classList.add('hidden');
-  localStorage.setItem(INSTALL_DISMISS_KEY, 'true');
-}
-
-installBannerDismiss.addEventListener('click', dismissInstallBanner);
-
-installBannerAction.addEventListener('click', async () => {
-  if (!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  installBanner.classList.add('hidden');
-});
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  showInstallBanner('Install Mola Mola Tracker on your phone for quick access.', { withAction: true });
-});
-
-window.addEventListener('appinstalled', () => {
-  installBanner.classList.add('hidden');
-  localStorage.setItem(INSTALL_DISMISS_KEY, 'true');
-});
-
-if (isIos() && !isStandalone()) {
-  showInstallBanner('Tip: tap Share, then "Add to Home Screen" to install this app.');
-}
+// --- Service worker (offline support + fresh updates) ---------------------
 
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   // When a newer service worker takes over a page that was already being
